@@ -1,0 +1,13 @@
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\NLog.config
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\RaspberryPiGateway.exe.config
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\RaspberryPiGateway.exe
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\RaspberryPiGateway.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\Amqp.Net.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\Newtonsoft.Json.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\NLog.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\Amqp.Net.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\Newtonsoft.Json.xml
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Debug\NLog.xml
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Debug\RaspberryPiGateway.exe
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Debug\RaspberryPiGateway.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Debug\RaspberryPiGateway.csprojResolveAssemblyReference.cache

@@ -1,0 +1,12 @@
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\NLog.config
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\RaspberryPiGateway.exe.config
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\RaspberryPiGateway.exe
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\RaspberryPiGateway.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\Amqp.Net.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\Newtonsoft.Json.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\NLog.dll
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\Amqp.Net.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\Newtonsoft.Json.xml
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\NLog.xml
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Release\RaspberryPiGateway.exe
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Release\RaspberryPiGateway.pdb
