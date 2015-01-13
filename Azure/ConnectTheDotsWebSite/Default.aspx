@@ -55,7 +55,7 @@
         
 
         .big-block{
-            margin-left: 25px;
+            margin-left: 100px;
         }
 
     </style>

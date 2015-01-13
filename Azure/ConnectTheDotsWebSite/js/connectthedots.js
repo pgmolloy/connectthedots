@@ -43,7 +43,9 @@ var D3_hum = [];
 
 // keep track of absolute freshest sample point
 
-var freshestTime = new Date();
+var freshestTime = [];
+freshestTime["Temperature"] = new Date();
+freshestTime["Humidity"] = new Date();
 
 // globals used with D3
 
@@ -199,6 +201,7 @@ function InsertNewDatapoint(data, time, val)
     }
 }
 
+
 //
 // AddToD3
 //
@@ -206,7 +209,18 @@ function InsertNewDatapoint(data, time, val)
 // dataset.
 //
 
-function AddToD3(D3_set, series_name, val, time) {
+function AddToD3(D3_set, chart_name, series_name, val, time) {
+
+    // if the time is not within 10 minutes of the current time, don't even bother
+    var cutoff = new Date(freshestTime[chart_name] - WINDOW_MINUTES * MS_PER_MINUTE);
+    if (time < cutoff)
+    {
+        console.log(time);
+        console.log(cutoff);
+        console.log(series_name);
+        return;
+    }
+
 
     var data = null;
     for (var i = 0; i < D3_set.length; i++) {
@@ -223,6 +237,13 @@ function AddToD3(D3_set, series_name, val, time) {
     // insert the new datapoint into the dataset
 
     InsertNewDatapoint(data, time, val);
+
+    // update fresh meters    
+
+    if (time > freshestTime[series_name]) {
+        freshestTime[series_name] = time;
+    }
+
 }
 
 //
@@ -234,14 +255,13 @@ function AddToD3(D3_set, series_name, val, time) {
 
 function UpdateD3Charts(D3_set, chart_name)
 {
-
     var minDate = new Date("3015-01-01T04:02:39.867841Z");
     var maxDate = new Date("1915-01-01T04:02:39.867841Z")
 
     var minVal = Number.MAX_VALUE;
     var maxVal = 0;
 
-    for (var i = 0; i < D3_set.length; i++) {
+    for (var i = 0; i < D3_set.length; i++) {        
 
         if (sensorNames.indexOf(D3_set[i].name) == -1) {
             sensorNames.push(D3_set[i].name);
@@ -306,6 +326,8 @@ function UpdateD3Charts(D3_set, chart_name)
         var data = D3_set[i].data;
         var name = D3_set[i].name;
 
+        $('#loading-sensor').text(name);
+
         if (path[chart_name][name] == null) {
             path[chart_name][name] = svg[chart_name].append("g")
                 .append("path")
@@ -336,7 +358,7 @@ function UpdateD3Charts(D3_set, chart_name)
                         .attr("y", 20 + (20 * i) + 5)
                         .attr("class", "legend")
                         .style("fill", color(name))
-                        .text(name);
+                        .text(name == 'avg' ? 'avg (of all sensors)' : name);
         }        
     }
 }
@@ -543,8 +565,6 @@ $(document).ready(function () {
 
                 if (exists == false){
 
-                    console.log(eventObject.dspl);
-
                     var ul = document.getElementById("sensorList");
                     var li = document.createElement("li");
                     li.appendChild(document.createTextNode(eventObject.dspl));
@@ -611,7 +631,7 @@ $(document).ready(function () {
                 // Message received is not an alert. let's display it in the charts
 
                 if (eventObject.tempavg != null) {                    
-                    AddToD3(D3_tmp, "avg", eventObject.tempavg, eventObject.time);
+                    AddToD3(D3_tmp, "Temperature", "avg", eventObject.tempavg, eventObject.time);
 
                     if (!isBulking) {
                         UpdateD3Charts(D3_tmp, "Temperature");
@@ -644,14 +664,14 @@ $(document).ready(function () {
                     // we make sure the dspl field is in the message, meaning the data is coming from a known device or service
                     if (eventObject.dspl != null) {
 
-                        AddToD3(D3_tmp, eventObject.dspl, eventObject.temp, eventObject.time);
-                        AddToD3(D3_hum, eventObject.dspl, eventObject.hmdt, eventObject.time);
+                        AddToD3(D3_tmp, "Temperature", eventObject.dspl, eventObject.temp, eventObject.time);
+                        AddToD3(D3_hum, "Humidity", eventObject.dspl, eventObject.hmdt, eventObject.time);
 
                         if (!isBulking) {
                             UpdateD3Charts(D3_tmp, "Temperature");
                             UpdateD3Charts(D3_hum, "Humidity");
                         } else {
-                            $('#loading-sensor').text(eventObject.dspl);
+                            
                         }
                     }
                 }
