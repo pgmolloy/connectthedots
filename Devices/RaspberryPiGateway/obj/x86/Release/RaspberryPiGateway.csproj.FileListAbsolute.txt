@@ -10,3 +10,4 @@ D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\Newtons
 D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\bin\Release\NLog.xml
 D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Release\RaspberryPiGateway.exe
 D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Release\RaspberryPiGateway.pdb
+D:\connectthedots3\connectthedots\Devices\RaspberryPIGateway\obj\x86\Release\RaspberryPiGateway.csprojResolveAssemblyReference.cache

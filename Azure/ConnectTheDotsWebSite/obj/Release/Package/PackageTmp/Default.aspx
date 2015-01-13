@@ -52,14 +52,39 @@
             padding: 10px;
         }
 
+        
+
         .big-block{
             margin-left: 25px;
         }
 
-        .selected{
-            border-style: solid;
-            border-width: 1px;
+    </style>
+
+    <!-- for device selection list -->
+
+    <style>
+
+        ul {
+            list-style-type: none;
+            padding-left:0;
+            font: 12px sans-serif;
+            color: #666;
         }
+
+        li {
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .selected {
+            font-weight: bold;
+        }
+
+
+        li.selected:before {
+            content: "\25BA \0020";
+        }
+
     </style>
 
     <!-- styles for D3 charts -->
@@ -155,7 +180,8 @@
 
     <div id="loading">
         <div id="loading-inner">
-            <p id="loading-text">LOADING</p>
+            <p id="loading-text">Loading last 10 minutes of data...</p>
+            <p id="loading-sensor"></p>
             <img id="loading-image" src="img/ajax-loader.gif" />
         </div>
     </div>
@@ -173,28 +199,11 @@
 
             <div style="float: left; width: 200px">
             
-                <!-- Select Sensor/R-PI:
-                <select id="dropdown">
-                    <option value="None">None</option>
-                    <option value="All">All</option>                    
-                    
-                </select> -->
-                
-                <p>Select Sensor/R-PI:</p>
+                <p><strong>Select Sensor/R-PI:</strong></p>
 
-                <!-- <a href="link" class="selected">All</a>
-                <a href="link">None</a> -->
-                <p></p>
-
-                <select id="dropdown" onchange="SensorSelectionChanged(this)">
-                    <option value="None">None</option>
-                    <option value="All">All</option>                    
-                    
-                </select>
-
-                <!-- <ul id="sensorList">
-
-                </ul> -->                               
+                <ul id="sensorList">
+                    <li class="selected">All</li>
+                </ul>             
                 
             </div>
 
@@ -220,7 +229,7 @@
             </div>
         </div>
 
-        <div class="big-block">
+        <div class="big-block"  style="width:1000px">
             <h3>Real Time Events</h3>
 
             <div>

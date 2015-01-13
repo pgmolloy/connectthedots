@@ -400,27 +400,6 @@ $(document).ready(function () {
             ClearD3Charts();
             var x = { MessageType: "LiveDataSelection", DeviceName: device };
             websocket.send(JSON.stringify(x));
-
-            $('#sensorList li').each(function () {
-                //this now refers to each li
-                //do stuff to each
-
-                var d = $(this).text();
-
-                if (d == device) {
-
-
-                    $(this).addClass('selected');
-                    $(this).css('color', color(d == 'All' ? 'avg' : d));
-                    $(this).css('font-weight', 'bold');
-                }
-                else {                
-                    $(this).removeClass('selected');
-                    $(this).css('color', '');
-                    $(this).css('font-weight', 'normal');
-                }
-            });
-
         }
     });
 
@@ -449,7 +428,6 @@ $(document).ready(function () {
     // Set up jQuery DataTable to show alerts
     var table = $('#alertTable').DataTable(
     {
-        "bAutoWidth": false,
         "columnDefs":
         [
             {
@@ -485,13 +463,19 @@ $(document).ready(function () {
 
     table.order([0, 'desc']);
 
+
+    var sss = (window.location.protocol.indexOf('s') > 0 ? "s" : "");
+
+
     // Set up websocket client
 
-    var sss = (window.location.protocol.indexOf('s') > 0 ? "s" : "");    
+    
     
     // var uri = 'ws'+ sss +'://' + window.location.host + '/api/websocketconnect?clientId=none';
 
     var uri = 'ws' + sss + '://' + 'connectthedots.msopentech.com' + '/api/websocketconnect?clientId=none';
+
+    //var uri = 'ws' + sss + '://' + 'olivier-connectthedots.azurewebsites.net' + '/api/websocketconnect?clientId=none';
 
     websocket = new WebSocket(uri);
 
@@ -529,6 +513,7 @@ $(document).ready(function () {
             var j = $('#sensorList li').eq(0);
             j.css('color', color('avg'));
             j.css('font-weight', 'bold');
+
         }
 
         // Seems like we have valid data
@@ -662,6 +647,7 @@ $(document).ready(function () {
             $('#messages').prepend('<div>Error processing message: ' + e.message + "</div>");
         }
     }
+
 });
 
 function SensorSelectionChanged(dropDown) {
@@ -673,6 +659,31 @@ function SensorSelectionChanged(dropDown) {
         var x = { MessageType: "LiveDataSelection", DeviceName: newSensor };
         websocket.send(JSON.stringify(x));        
     }
+    /*for (var i = 1; i < tempChart.series.length; i++) {
+        if (newSensor == "All" || tempChart.series[i].name == newSensor) {
+            tempChart.series[i].show();
+        }
+        else {
+            tempChart.series[i].hide();
+        }
+    }
+    for (var i = 1; i < humChart.series.length; i++) {
+        if (newSensor == "All" || humChart.series[i].name == newSensor) {
+            humChart.series[i].show();
+        }
+        else {
+            humChart.series[i].hide();
+        }
+    }*/
+
+    //for (var i = 1; i < lightChart.series.length; i++) {
+    //    if (newSensor == "All" || lightChart.series[i].name == newSensor) {
+    //        lightChart.series[i].show();
+    //    }
+    //    else {
+    //        lightChart.series[i].hide();
+    //    }
+    //}
 }
 
 function ShowHide(tHtml) {
