@@ -44,8 +44,8 @@ var D3_hum = [];
 // keep track of absolute freshest sample point
 
 var freshestTime = [];
-freshestTime["Temperature"] = new Date();
-freshestTime["Humidity"] = new Date();
+freshestTime["Temperature"] = null;
+freshestTime["Humidity"] = null;
 
 // globals used with D3
 
@@ -212,8 +212,11 @@ function InsertNewDatapoint(data, time, val)
 function AddToD3(D3_set, chart_name, series_name, val, time) {
 
     // if the time is not within 10 minutes of the current time, don't even bother
+    var t = new Date(time);
     var cutoff = new Date(freshestTime[chart_name] - WINDOW_MINUTES * MS_PER_MINUTE);
-    if (time < cutoff)
+
+    
+    if (t < cutoff)
     {
         console.log(time);
         console.log(cutoff);
@@ -240,8 +243,13 @@ function AddToD3(D3_set, chart_name, series_name, val, time) {
 
     // update fresh meters    
 
-    if (time > freshestTime[series_name]) {
-        freshestTime[series_name] = time;
+    if (freshestTime[chart_name] == null) {
+        freshestTime[chart_name] = new Date(time);
+    }
+    else {
+        if (time > freshestTime[chart_name]) {
+            freshestTime[chart_name] = new Date(time);
+        }
     }
 
 }
@@ -324,9 +332,7 @@ function UpdateD3Charts(D3_set, chart_name)
     for (var i = 0; i < D3_set.length; i++) {
 
         var data = D3_set[i].data;
-        var name = D3_set[i].name;
-
-        $('#loading-sensor').text(name);
+        var name = D3_set[i].name;        
 
         if (path[chart_name][name] == null) {
             path[chart_name][name] = svg[chart_name].append("g")
@@ -417,31 +423,74 @@ $(document).ready(function () {
 
     $('#sensorList').on('click', 'li', function () {
         var device = $(this).text();
-        if (websocket != null) {
+        if (websocket != null) {            
+
 
             ClearD3Charts();
-            var x = { MessageType: "LiveDataSelection", DeviceName: device };
-            websocket.send(JSON.stringify(x));
 
-            $('#sensorList li').each(function () {
-                //this now refers to each li
-                //do stuff to each
+            if (device == 'All') {
+
+                var c = { MessageType: "LiveDataSelection", DeviceName: 'clear' };
+                websocket.send(JSON.stringify(x));
+
+                var x = { MessageType: "LiveDataSelection", DeviceName: device };
+                websocket.send(JSON.stringify(x));
+
+                $('#sensorList li').each(function () {
+                    //this now refers to each li
+                    //do stuff to each
+
+                    var d = $(this).text();
+
+                    if (d == device) {
+                        $(this).addClass('selected');
+                        $(this).css('color', color(d == 'All' ? 'avg' : d));
+                        $(this).css('font-weight', 'bold');
+                    }
+                    else {
+                        $(this).removeClass('selected');
+                        $(this).css('color', '');
+                        $(this).css('font-weight', 'normal');
+                    }
+                });
+
+            }
+            else {
+
+                // not 'All' so general case
+
+                var j = $('#sensorList li').eq(0);
+                j.removeClass('selected');
+                j.css('color', '');
+                j.css('font-weight', 'normal');
 
                 var d = $(this).text();
-
-                if (d == device) {
-
-
-                    $(this).addClass('selected');
-                    $(this).css('color', color(d == 'All' ? 'avg' : d));
-                    $(this).css('font-weight', 'bold');
-                }
-                else {                
+                if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
                     $(this).css('color', '');
                     $(this).css('font-weight', 'normal');
                 }
-            });
+                else {
+                    $(this).addClass('selected');
+                    $(this).css('color', color(d == 'All' ? 'avg' : d));
+                    $(this).css('font-weight', 'bold');
+                }
+
+                var x = { MessageType: "LiveDataSelection", DeviceName: "clear" };
+                websocket.send(JSON.stringify(x));
+
+                $('#sensorList li').each(function () {
+                    //this now refers to each li
+                    //do stuff to each
+
+                    var d = $(this).text();
+
+                    if ($(this).hasClass('selected')) {
+                        var x = { MessageType: "LiveDataSelection", DeviceName: $(this).text() };
+                        websocket.send(JSON.stringify(x));
+                    }
+                });
+            }
 
         }
     });
@@ -511,9 +560,9 @@ $(document).ready(function () {
 
     var sss = (window.location.protocol.indexOf('s') > 0 ? "s" : "");    
     
-    // var uri = 'ws'+ sss +'://' + window.location.host + '/api/websocketconnect?clientId=none';
+    var uri = 'ws'+ sss +'://' + window.location.host + '/api/websocketconnect?clientId=none';
 
-    var uri = 'ws' + sss + '://' + 'connectthedots.msopentech.com' + '/api/websocketconnect?clientId=none';
+    // var uri = 'ws' + sss + '://' + 'connectthedots.msopentech.com' + '/api/websocketconnect?clientId=none';
 
     websocket = new WebSocket(uri);
 
@@ -524,6 +573,7 @@ $(document).ready(function () {
     }
 
     websocket.onerror = function (event) {
+        console.log(event);
         $('#messages').prepend('<div>ERROR ' + event.error + '</div>');
     }
 
@@ -542,6 +592,8 @@ $(document).ready(function () {
 
         if (receivedFirstMessage == false) {
             var x = { MessageType: "LiveDataSelection", DeviceName: 'All' };
+
+            console.log(x);
             websocket.send(JSON.stringify(x));
 
             receivedFirstMessage = true;
@@ -640,6 +692,9 @@ $(document).ready(function () {
                         $('#loading-sensor').text("avg");
                     }
                 }
+                else if (eventObject.Dummy != null) {
+                    console.log("DUMMY!");
+                }
                 else if (eventObject.bulkData != null) {
 
                     // Don't update while receiving bulk data.  It will
@@ -671,7 +726,7 @@ $(document).ready(function () {
                             UpdateD3Charts(D3_tmp, "Temperature");
                             UpdateD3Charts(D3_hum, "Humidity");
                         } else {
-                            
+                            $('#loading-sensor').text(name);
                         }
                     }
                 }
