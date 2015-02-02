@@ -611,14 +611,7 @@ $(document).ready(function () {
 });
 
 // Deal with message received on WebSocket
-function processMessageFromServer(event) {
-    try {
-        // Parse the JSON package
-        var eventObject = JSON.parse(event.data);
-    }
-    catch (e) {
-        $('#messages').prepend('<div>Malformed message: ' + event.data + "</div>");
-    }
+function processMessageFromServer(eventObject) {
 
     // initialize the page with all sensors
 

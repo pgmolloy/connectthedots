@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace ConnectTheDotsWebSite
         public static string DeviceFilter = null;
         public static List<string> DeviceFilterList = new List<string>();
 
-        public override System.Threading.Tasks.Task OnConnected()
+        public override Task OnConnected()
         {
             Console.WriteLine("Client connected");
             return base.OnConnected();
@@ -62,9 +63,39 @@ namespace ConnectTheDotsWebSite
             ResendDataToClient();
         }
 
+        public void SendFiltered(IDictionary<string, object> message)
+        {
+            if (!message.ContainsKey("dspl") ||
+                    (DeviceFilterList != null && (
+                        DeviceFilterList.Contains("all")
+                        || DeviceFilterList.Contains(message["dspl"].ToString().ToLower())
+                )))
+            {
+                this.Send(JsonConvert.SerializeObject(message));
+            }
+        }
+
         private void ResendDataToClient()
         {
+            var bufferedMessages = EventProcessor.GetAllBufferedMessages();
 
+            this.Send(JsonConvert.SerializeObject(new Dictionary<string, object> 
+                { 
+                    { "bulkData", true }
+                }
+            ));
+
+
+            foreach (var message in bufferedMessages)
+            {
+                this.SendFiltered(message);
+            }
+
+            this.Send(JsonConvert.SerializeObject(new Dictionary<string, object> 
+                { 
+                    { "bulkData", false}
+                }
+            ));
         }
 
         public static void SendToClients(IDictionary<string, object> message)
