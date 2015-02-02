@@ -88,7 +88,7 @@ namespace ConnectTheDotsWebSite
 
             foreach (var message in bufferedMessages)
             {
-                this.SendFiltered(message);
+                this.SendFiltered(message.Value);
             }
 
             this.Send(JsonConvert.SerializeObject(new Dictionary<string, object> 

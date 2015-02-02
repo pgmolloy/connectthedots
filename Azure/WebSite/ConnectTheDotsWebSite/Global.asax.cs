@@ -80,7 +80,7 @@ namespace ConnectTheDotsWebSite
 
             var options = new EventProcessorOptions();
             options.ExceptionReceived += EventProcessor.ExceptionReceived;
-            options.InitialOffsetProvider = context => DateTime.UtcNow;
+            options.InitialOffsetProvider = (partitionId) => DateTime.UtcNow;
 
             Trace.TraceInformation("Registering EventProcessor for Devices");
             processorHostDevices.RegisterEventProcessorAsync<EventProcessor>(options).Wait();
