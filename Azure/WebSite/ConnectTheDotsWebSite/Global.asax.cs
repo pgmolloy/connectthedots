@@ -79,11 +79,11 @@ namespace ConnectTheDotsWebSite
                 );
 
             var options = new EventProcessorOptions();
-            options.ExceptionReceived += WebSocketEventProcessor.ExceptionReceived;
-            options.InitialOffsetProvider = OnlyNewDataOffsetProvider;
+            options.ExceptionReceived += EventProcessor.ExceptionReceived;
+            options.InitialOffsetProvider = context => DateTime.UtcNow;
 
             Trace.TraceInformation("Registering EventProcessor for Devices");
-            processorHostDevices.RegisterEventProcessorAsync<WebSocketEventProcessor>(options).Wait();
+            processorHostDevices.RegisterEventProcessorAsync<EventProcessor>(options).Wait();
 
             Trace.TraceInformation("Creating EventProcessorHost: {0}, {1}, {2}", this.Server.MachineName, eventHubAlerts, eventHubAlertsConsumerGroup);
             processorHostAlerts = new EventProcessorHost(this.Server.MachineName,
@@ -93,12 +93,7 @@ namespace ConnectTheDotsWebSite
                 storageConnectionString
             );
             Trace.TraceInformation("Registering EventProcessor for Alerts");
-            processorHostAlerts.RegisterEventProcessorAsync<WebSocketEventProcessor>(options).Wait();
-        }
-
-        private static string OnlyNewDataOffsetProvider(object context)
-        {
-            return "0";
+            processorHostAlerts.RegisterEventProcessorAsync<EventProcessor>(options).Wait();
         }
 
         protected void Application_End(Object sender, EventArgs e)
