@@ -474,7 +474,7 @@ $(document).ready(function () {
             if (device == 'All') {                
 
                 var c = { MessageType: "LiveDataSelection", DeviceName: "clear" };
-                websocket.send(JSON.stringify(x));
+                websocket.send(JSON.stringify(c));
 
                 var x = { MessageType: "LiveDataSelection", DeviceName: device };
                 websocket.send(JSON.stringify(x));
